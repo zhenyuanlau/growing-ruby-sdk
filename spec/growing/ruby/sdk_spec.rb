@@ -4,6 +4,8 @@ RSpec.describe Growing::Ruby::Sdk do
   end
 
   it "does something useful" do
-    expect(false).to eq(true)
+    account_id = '*' * 16
+    gio = Growing::Ruby::Sdk::Client.instance(account_id)
+    expect(gio.track('1', 'e', {})).to be true
   end
 end

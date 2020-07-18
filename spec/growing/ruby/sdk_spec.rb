@@ -5,7 +5,7 @@ RSpec.describe Growing::Ruby::Sdk do
 
   it "does something useful" do
     account_id = '*' * 16
-    gio = Growing::Ruby::Sdk::Client.instance(account_id)
+    gio = Growing::Ruby::Sdk::Client.instance(account_id, "https://api.growingio.com")
     expect(gio.track('1', 'e', {})).to be true
   end
 end

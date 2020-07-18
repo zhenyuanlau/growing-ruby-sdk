@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    growing-ruby-sdk (0.1.0)
+    growing-ruby-sdk (0.2.0)
       faraday
       google-protobuf
 
@@ -12,7 +12,7 @@ GEM
     diff-lcs (1.4.4)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
-    google-protobuf (3.12.2)
+    google-protobuf (3.12.2-universal-darwin)
     method_source (1.0.0)
     multipart-post (2.1.1)
     pry (0.13.1)

@@ -3,7 +3,7 @@
 
 require 'google/protobuf'
 
-require 'v1/dto/user_profile_pb'
+require 'growing/ruby/sdk/pb/v1/dto/user_profile_pb'
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("v1/dto/user.proto", :syntax => :proto3) do
     add_message "io.growing.tunnel.protocol.UserDto" do

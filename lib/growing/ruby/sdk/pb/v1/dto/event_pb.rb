@@ -3,8 +3,8 @@
 
 require 'google/protobuf'
 
-require 'v1/dto/context_pb'
-require 'v1/dto/item_pb'
+require 'growing/ruby/sdk/pb/v1/dto/context_pb'
+require 'growing/ruby/sdk/pb/v1/dto/item_pb'
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("v1/dto/event.proto", :syntax => :proto3) do
     add_message "io.growing.tunnel.protocol.EventDto" do

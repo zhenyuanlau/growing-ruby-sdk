@@ -5,6 +5,7 @@ require 'google/protobuf'
 require "growing/ruby/sdk/pb/v1/dto/event_pb"
 require "growing/ruby/sdk/pb/v1/dto/user_pb"
 require 'active_support/core_ext/array/grouping'
+require 'timers'
 
 ::Protocol = ::Io::Growing::Tunnel::Protocol
 
@@ -23,6 +24,7 @@ module Growing
           @data_source_id = data_source_id
           @api_host = api_host
           @event_queue = {}
+          @timers = Timers::Group.new
         end
 
         def self.instance(account_id, data_source_id, api_host)
@@ -59,14 +61,14 @@ module Growing
         end
 
         def send_data
-          @event_queue['collect_user'].in_groups_of(100) do |group|
+          @event_queue['collect_user'].to_a.in_groups_of(100) do |group|
             user_list = ::Protocol::UserList.new
             group.each do |user|
               user_list['values'] << user
             end
             _send_data('collect_user', JSON.parse(::Protocol::UserList.encode_json(user_list))["values"])
           end
-          @event_queue['collect_cstm'].in_groups_of(100) do |group|
+          @event_queue['collect_cstm'].to_a.in_groups_of(100) do |group|
             event_list = ::Protocol::EventList.new
             group.each do |event|
               event_list['values'] << event
@@ -74,6 +76,14 @@ module Growing
             _send_data('collect_cstm', JSON.parse(::Protocol::EventList.encode_json(event_list))["values"])
           end
           @event_queue = {}
+        end
+
+        # thread unsafe
+        def auto_track
+          Thread.new do
+            @timers.every(60) { send_data }
+            loop { @timers.wait }
+          end
         end
 
         private

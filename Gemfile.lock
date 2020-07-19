@@ -1,10 +1,11 @@
 PATH
   remote: .
   specs:
-    growing-ruby-sdk (0.2.0)
+    growing-ruby-sdk (0.3.0)
       activesupport
       faraday
       google-protobuf
+      timers
 
 GEM
   remote: https://rubygems.org/
@@ -44,6 +45,7 @@ GEM
       rspec-support (~> 3.9.0)
     rspec-support (3.9.3)
     thread_safe (0.3.6)
+    timers (4.3.0)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
     zeitwerk (2.4.0)

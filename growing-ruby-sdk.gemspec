@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "faraday"
   spec.add_dependency "google-protobuf"
   spec.add_dependency "activesupport"
+  spec.add_dependency "timers"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency 'pry'
 end

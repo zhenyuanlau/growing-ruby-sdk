@@ -1,3 +1,4 @@
+require 'active_support/time'
 require "growing/ruby/sdk/version"
 require "growing/ruby/sdk/client"
 

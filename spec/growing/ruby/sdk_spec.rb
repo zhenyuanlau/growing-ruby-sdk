@@ -8,7 +8,10 @@ RSpec.describe Growing::Ruby::Sdk do
     data_source_id = '9857ab8fc91a8d3b'
     api_host = "http://117.50.94.81:8080"
     gio = Growing::Ruby::Sdk::Client.instance(account_id, data_source_id, api_host)
-    expect(gio.collect_user("crm", {"name": "crm"})).to be true
-    expect(gio.collect_cstm("crm", "crm", { a: "a" })).to be true
+    gio.collect_user("crm_user#{Time.now}", {"name": "crm"})
+    gio.collect_cstm("crm_user#{Time.now}", "crm_cstm", { a: "a" })
+    expect(gio.event_queue['collect_user'].length).not_to be 0
+    gio.send_data
+    expect(gio.event_queue.empty?).to be true
   end
 end

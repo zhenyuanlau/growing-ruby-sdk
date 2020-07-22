@@ -1,11 +1,13 @@
-require 'date'
-require 'json'
-require 'faraday'
-require 'google/protobuf'
+# frozen_string_literal: true
+
+require "date"
+require "json"
+require "faraday"
+require "google/protobuf"
 require "growing/ruby/sdk/pb/v1/dto/event_pb"
 require "growing/ruby/sdk/pb/v1/dto/user_pb"
-require 'active_support/core_ext/array/grouping'
-require 'timers'
+require "active_support/core_ext/array/grouping"
+require "timers"
 
 ::Protocol = ::Io::Growing::Tunnel::Protocol
 
@@ -43,11 +45,11 @@ module Growing
             gio_id: login_user_id,
             attributes: props,
             timestamp: current_timestamp)
-          @event_queue['collect_user'] ||= [] 
-          @event_queue['collect_user'] << user
+          @event_queue["collect_user"] ||= []
+          @event_queue["collect_user"] << user
         end
 
-        def collect_cstm(login_user_id, event_key, props = {}) 
+        def collect_cstm(login_user_id, event_key, props = {})
           event = ::Protocol::EventDto.new(
             project_key: @account_id,
             data_source_id: @data_source_id,
@@ -56,24 +58,24 @@ module Growing
             event_key: event_key,
             attributes: props,
             timestamp: current_timestamp)
-          @event_queue['collect_cstm'] ||= [] 
-          @event_queue['collect_cstm'] << event
+          @event_queue["collect_cstm"] ||= []
+          @event_queue["collect_cstm"] << event
         end
 
         def send_data
-          @event_queue['collect_user'].to_a.in_groups_of(100) do |group|
+          @event_queue["collect_user"].to_a.in_groups_of(100) do |group|
             user_list = ::Protocol::UserList.new
             group.each do |user|
-              user_list['values'] << user
+              user_list["values"] << user
             end
-            _send_data('collect_user', JSON.parse(::Protocol::UserList.encode_json(user_list))["values"])
+            _send_data("collect_user", JSON.parse(::Protocol::UserList.encode_json(user_list))["values"])
           end
-          @event_queue['collect_cstm'].to_a.in_groups_of(100) do |group|
+          @event_queue["collect_cstm"].to_a.in_groups_of(100) do |group|
             event_list = ::Protocol::EventList.new
             group.each do |event|
-              event_list['values'] << event
+              event_list["values"] << event
             end
-            _send_data('collect_cstm', JSON.parse(::Protocol::EventList.encode_json(event_list))["values"])
+            _send_data("collect_cstm", JSON.parse(::Protocol::EventList.encode_json(event_list))["values"])
           end
           @event_queue = {}
         end
@@ -87,19 +89,19 @@ module Growing
         end
 
         private
-        def _send_data(action, data)
-          Faraday.post(url(action), "#{data}", "Content-Type" => "application/json")
-        rescue
-          pp 'Error'
-        end
+          def _send_data(action, data)
+            Faraday.post(url(action), "#{data}", "Content-Type" => "application/json")
+          rescue
+            pp "Error"
+          end
 
-        def url(action)
-          "#{@api_host}/projects/#{@account_id}/#{action.gsub('_', '/')}"
-        end
+          def url(action)
+            "#{@api_host}/projects/#{@account_id}/#{action.gsub('_', '/')}"
+          end
 
-        def current_timestamp
-          ::DateTime.now.strftime('%Q').to_i
-        end
+          def current_timestamp
+            ::DateTime.now.strftime("%Q").to_i
+          end
       end
     end
   end

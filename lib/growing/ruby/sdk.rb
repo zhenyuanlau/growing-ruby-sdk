@@ -1,4 +1,6 @@
-require 'active_support/time'
+# frozen_string_literal: true
+
+require "active_support/time"
 require "growing/ruby/sdk/version"
 require "growing/ruby/sdk/client"
 
